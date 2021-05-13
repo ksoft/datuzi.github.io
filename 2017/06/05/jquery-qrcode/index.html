@@ -16,9 +16,9 @@
   <meta name="theme-color" content="#2f4154">
   <meta name="description" content="">
   <meta name="author" content="DatuZi">
-  <meta name="keywords" content="">
+  <meta name="keywords" content="jQuery">
   
-  <title>Hello World - www.datuzi.cn</title>
+  <title>jQuery QRcode - www.datuzi.cn</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
@@ -163,7 +163,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Hello World">
+            <span class="h2" id="subtitle" title="jQuery QRcode">
               
             </span>
 
@@ -173,8 +173,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-05-08 17:58" pubdate>
-        2021年5月8日 下午
+      <time datetime="2017-06-05 19:20" pubdate>
+        2017年6月5日 晚上
       </time>
     </span>
   
@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      75 字
+      297 字
     </span>
   
 
@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1
+      5
        分钟
     </span>
   
@@ -225,34 +225,39 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Hello World</h1>
+            <h1 style="display: none">jQuery QRcode</h1>
             
               <p class="note note-info">
                 
-                  本文最后更新于：2021年5月8日 下午
+                  本文最后更新于：2021年5月13日 上午
                 
               </p>
             
             <div class="markdown-body">
-              <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo new <span class="hljs-string">&quot;My New Post&quot;</span><br></code></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo server<br></code></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo generate<br></code></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo deploy<br></code></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+              <p>通过jQuery生成二维码.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="引用jquery-jquery-qrcode"><a href="#引用jquery-jquery-qrcode" class="headerlink" title="引用jquery,jquery-qrcode"></a>引用jquery,jquery-qrcode</h3><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs markdown"><span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/javascript&quot;</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;../../scripts/jquery-1.10.1.min.js&quot;</span>&gt;</span></span><span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span><br><span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;../../scripts/jquery.qrcode.min.js&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/javascript&quot;</span>&gt;</span></span><span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span><br></code></pre></td></tr></table></figure>
+<h3 id="定义div"><a href="#定义div" class="headerlink" title="定义div"></a>定义div</h3><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs markdown"><span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;code&quot;</span>&gt;</span></span><span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br></code></pre></td></tr></table></figure>
+<h3 id="调用"><a href="#调用" class="headerlink" title="调用"></a>调用</h3><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs markdown">function showQRCodeDiv() &#123;<br><span class="hljs-code">    var row = mastergrid.getRowByUID(row_uid);</span><br><span class="hljs-code">    $(&quot;#code&quot;).text(&quot;&quot;).qrcode(&#123;</span><br><span class="hljs-code">        render: &quot;canvas&quot;, //table/canvas方式</span><br><span class="hljs-code">        width: 228, //宽度</span><br><span class="hljs-code">        height:228, //高度</span><br><span class="hljs-code">        text: utf16to8(‘测试’) //二维码</span><br><span class="hljs-code">    &#125;);</span><br><span class="hljs-code">&#125;</span><br><span class="hljs-code"></span><br>function utf16to8(str) &#123;<br><span class="hljs-code">    var out, i, len, c;</span><br><span class="hljs-code">    out = &quot;&quot;;</span><br><span class="hljs-code">    len = str.length;</span><br><span class="hljs-code">    for(i = 0; i &lt; len; i++) &#123;</span><br><span class="hljs-code">        c = str.charCodeAt(i);</span><br><span class="hljs-code">        if ((c &gt;= 0x0001) &amp;&amp; (c &lt;= 0x007F)) &#123;</span><br><span class="hljs-code">            out += str.charAt(i);</span><br><span class="hljs-code">        &#125; else if (c &gt; 0x07FF) &#123;</span><br><span class="hljs-code">            out += String.fromCharCode(0xE0 | ((c &gt;&gt; 12) &amp; 0x0F));</span><br><span class="hljs-code">            out += String.fromCharCode(0x80 | ((c &gt;&gt;  6) &amp; 0x3F));</span><br><span class="hljs-code">            out += String.fromCharCode(0x80 | ((c &gt;&gt;  0) &amp; 0x3F));</span><br><span class="hljs-code">        &#125; else &#123;</span><br><span class="hljs-code">            out += String.fromCharCode(0xC0 | ((c &gt;&gt;  6) &amp; 0x1F));</span><br><span class="hljs-code">            out += String.fromCharCode(0x80 | ((c &gt;&gt;  0) &amp; 0x3F));</span><br><span class="hljs-code">        &#125;</span><br><span class="hljs-code">    &#125;</span><br><span class="hljs-code">    return out;</span><br><span class="hljs-code">&#125;</span><br><span class="hljs-code"></span><br>function saveQRCodeDiv() &#123;<br><span class="hljs-code">    var myCanvas = $(&quot;canvas&quot;)[0];</span><br><span class="hljs-code">    var image = myCanvas.toDataURL(&quot;image/png&quot;).replace(&quot;image/png&quot;, &quot;image/octet-stream&quot;);</span><br><span class="hljs-code"></span><br><span class="hljs-code">    var link = document.createElement(&#x27;a&#x27;);</span><br><span class="hljs-code">    link.href = image;</span><br><span class="hljs-code">    var filename = mini.get(&quot;bqcode_2&quot;).getValue() + &#x27;.png&#x27;;</span><br><span class="hljs-code">    link.download = filename;</span><br><span class="hljs-code">    var event = document.createEvent(&#x27;MouseEvents&#x27;);</span><br><span class="hljs-code">    event.initMouseEvent(&#x27;click&#x27;, true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);</span><br><span class="hljs-code">    link.dispatchEvent(event);</span><br><span class="hljs-code">&#125;</span><br></code></pre></td></tr></table></figure>
 
             </div>
             <hr>
             <div>
               <div class="post-metas mb-3">
                 
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/jQuery/">jQuery</a>
+                    
+                  </div>
                 
               </div>
               
@@ -267,21 +272,15 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/05/12/zhangzichen/">
+                      <a href="/2017/12/03/select2/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">张子宸</span>
+                        <span class="hidden-mobile">select2</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </article>
                   <article class="post-next col-6">
                     
-                    
-                      <a href="/2018/02/05/2018-02-27-javamail/">
-                        <span class="hidden-mobile">javaMail</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
                     
                   </article>
                 </div>
