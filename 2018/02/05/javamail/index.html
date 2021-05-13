@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.1k 字
+      1.2k 字
     </span>
   
 
@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      20
+      21
        分钟
     </span>
   
@@ -234,7 +234,7 @@
               </p>
             
             <div class="markdown-body">
-              <p>javaMail发送邮件</p>
+              <p>JavaMail，顾名思义，提供给开发者处理电子邮件相关的编程接口。它是Sun发布的用来处理email的API。它可以方便地执行一些常用的邮件传输。我们可以基于JavaMail开发出类似于Microsoft Outlook的应用程序。</p>
 <h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="properties配置文件"><a href="#properties配置文件" class="headerlink" title="properties配置文件"></a>properties配置文件</h3><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-comment">#-------------邮件服务器信息-------------------</span><br><span class="hljs-attr">mail.smtp.auth</span>=<span class="hljs-literal">true</span><br><span class="hljs-attr">mail.smtp.timeout</span>=<span class="hljs-number">25000</span><br><span class="hljs-attr">mail.smtp.starttls.enable</span>=<span class="hljs-literal">false</span><br><br><span class="hljs-attr">ywt.email.host</span>=mail.xxx.com<br><span class="hljs-attr">ywt.email.port</span>=<span class="hljs-number">25</span><br><span class="hljs-attr">ywt.email.from</span>=zhangianbo@xxx.com<br><span class="hljs-attr">ywt.email.username</span>=xxx<br><span class="hljs-attr">ywt.email.password</span>=yyy<br></code></pre></td></tr></table></figure>
 
 <h3 id="添加maven依赖-poi、javamail"><a href="#添加maven依赖-poi、javamail" class="headerlink" title="添加maven依赖:poi、javamail"></a>添加maven依赖:poi、javamail</h3><h3 id="spring配置文件"><a href="#spring配置文件" class="headerlink" title="spring配置文件"></a>spring配置文件</h3><figure class="highlight dust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs dust"><span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;javaMailSender&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;org.springframework.mail.javamail.JavaMailSenderImpl&quot;</span>&gt;</span></span><br><span class="xml">        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;javaMailProperties&quot;</span>&gt;</span></span><br><span class="xml">            <span class="hljs-tag">&lt;<span class="hljs-name">props</span>&gt;</span></span><br><span class="xml">                <span class="hljs-tag">&lt;<span class="hljs-name">prop</span> <span class="hljs-attr">key</span>=<span class="hljs-string">&quot;mail.smtp.auth&quot;</span>&gt;</span>$</span><span class="hljs-template-variable">&#123;mail.smtp.auth&#125;</span><span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">prop</span>&gt;</span></span><br><span class="xml">                <span class="hljs-tag">&lt;<span class="hljs-name">prop</span> <span class="hljs-attr">key</span>=<span class="hljs-string">&quot;mail.smtp.timeout&quot;</span>&gt;</span>$</span><span class="hljs-template-variable">&#123;mail.smtp.timeout&#125;</span><span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">prop</span>&gt;</span></span><br><span class="xml">                <span class="hljs-tag">&lt;<span class="hljs-name">prop</span> <span class="hljs-attr">key</span>=<span class="hljs-string">&quot;mail.smtp.starttls.enable&quot;</span>&gt;</span>$</span><span class="hljs-template-variable">&#123;mail.smtp.starttls.enable&#125;</span><span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">prop</span>&gt;</span></span><br><span class="xml">                <span class="hljs-comment">&lt;!-- &lt;prop key=&quot;mail.smtp.socketFactory.class&quot;&gt;javax.net.ssl.SSLSocketFactory&lt;/prop&gt; --&gt;</span></span><br><span class="xml">            <span class="hljs-tag">&lt;/<span class="hljs-name">props</span>&gt;</span></span><br><span class="xml">        <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span></span><br><span class="xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span></span><br></code></pre></td></tr></table></figure>
