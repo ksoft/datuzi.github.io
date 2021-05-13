@@ -42,18 +42,6 @@
       </tags>
   </entry>
   <entry>
-    <title>MyLove</title>
-    <url>/2021/05/12/mylove/</url>
-    <content><![CDATA[<p><img src="/assets/photo/love.jpg" alt="MyLove"></p>
-]]></content>
-      <categories>
-        <category>照片</category>
-      </categories>
-      <tags>
-        <tag>MyLove</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>jQuery QRcode</title>
     <url>/2017/06/05/jquery-qrcode/</url>
     <content><![CDATA[<p>jquery.qrcode.js 是一个能够在客户端生成矩阵二维码QRCode 的jquery插件 ,使用它可以很方便的在页面上生成二维条码。</p>
@@ -83,6 +71,18 @@
       </categories>
       <tags>
         <tag>select2</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MyLove</title>
+    <url>/2021/05/12/mylove/</url>
+    <content><![CDATA[<p><img src="/assets/photo/love.jpg" alt="MyLove"></p>
+]]></content>
+      <categories>
+        <category>照片</category>
+      </categories>
+      <tags>
+        <tag>MyLove</tag>
       </tags>
   </entry>
   <entry>
