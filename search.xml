@@ -1,474 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
-<search>
-  <entry>
-    <title>Hello World</title>
-    <url>/2021/05/13/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre class=" language-bash"><code class="language-bash">$ hexo new <span class="token string">"My New Post"</span>
-</code></pre>
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre class=" language-bash"><code class="language-bash">$ hexo server
-</code></pre>
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre class=" language-bash"><code class="language-bash">$ hexo generate
-</code></pre>
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre class=" language-bash"><code class="language-bash">$ hexo deploy
-</code></pre>
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
-  </entry>
-  <entry>
-    <title>javaMail</title>
-    <url>/2018/02/05/javamail/</url>
-    <content><![CDATA[<p>JavaMail，顾名思义，提供给开发者处理电子邮件相关的编程接口。它是Sun发布的用来处理email的API。它可以方便地执行一些常用的邮件传输。我们可以基于JavaMail开发出类似于Microsoft Outlook的应用程序。</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="properties配置文件"><a href="#properties配置文件" class="headerlink" title="properties配置文件"></a>properties配置文件</h3><pre><code>#-------------邮件服务器信息-------------------
-mail.smtp.auth=true
-mail.smtp.timeout=25000
-mail.smtp.starttls.enable=false
-
-ywt.email.host=mail.xxx.com
-ywt.email.port=25
-ywt.email.from=zhangianbo@xxx.com
-ywt.email.username=xxx
-ywt.email.password=yyy
-</code></pre>
-<h3 id="添加maven依赖-poi、javamail"><a href="#添加maven依赖-poi、javamail" class="headerlink" title="添加maven依赖:poi、javamail"></a>添加maven依赖:poi、javamail</h3><h3 id="spring配置文件"><a href="#spring配置文件" class="headerlink" title="spring配置文件"></a>spring配置文件</h3><pre><code>&lt;bean id=&quot;javaMailSender&quot; class=&quot;org.springframework.mail.javamail.JavaMailSenderImpl&quot;&gt;
-        &lt;property name=&quot;javaMailProperties&quot;&gt;
-            &lt;props&gt;
-                &lt;prop key=&quot;mail.smtp.auth&quot;&gt;$&#123;mail.smtp.auth&#125;&lt;/prop&gt;
-                &lt;prop key=&quot;mail.smtp.timeout&quot;&gt;$&#123;mail.smtp.timeout&#125;&lt;/prop&gt;
-                &lt;prop key=&quot;mail.smtp.starttls.enable&quot;&gt;$&#123;mail.smtp.starttls.enable&#125;&lt;/prop&gt;
-                &lt;!-- &lt;prop key=&quot;mail.smtp.socketFactory.class&quot;&gt;javax.net.ssl.SSLSocketFactory&lt;/prop&gt; --&gt;
-            &lt;/props&gt;
-        &lt;/property&gt;
-    &lt;/bean&gt;
-</code></pre>
-<h3 id="EmailSendDto"><a href="#EmailSendDto" class="headerlink" title="EmailSendDto"></a>EmailSendDto</h3><pre><code>/**
- * @author zhangjianbo
- * @date 2018/2/23
- */
-@Data
-@NoArgsConstructor
-public class EmailSendDto implements Serializable&#123;
-    private String from;
-    private String to;
-    private String subject;
-    private String text;
-    /**
-     * zip压缩包文件名
-     */
-    private String zipFileName;
-    /**
-     * 是否批量发送
-     */
-    private Boolean isBatch=false;
-
-    /**
-     * 是否有附件
-     */
-    private Boolean multipart=false;
-    /**
-     * csv文件名列表
-     */
-    private List&lt;String&gt; fileNameList=new ArrayList&lt;&gt;();
-    /**
-     * csv文件表头
-     */
-    private List&lt;String[]&gt; headerList=new ArrayList&lt;&gt;();
-    /**
-     * csv文件数据
-     */
-    private List&lt;List&lt;String[]&gt;&gt; dataList=new ArrayList&lt;&gt;();
-&#125;
-</code></pre>
-<h3 id="EmailService"><a href="#EmailService" class="headerlink" title="EmailService"></a>EmailService</h3><pre><code>/**
- * @author zhangjianbo
- * @date 2018/2/22
- */
-public interface EmailService &#123;
-    /**
-     * 发送邮件
-     * @param emailSendDto
-     * @return
-     */
-    EmailSendResultDto send(EmailSendDto emailSendDto);
-&#125;
-</code></pre>
-<h3 id="EmailServiceImpl"><a href="#EmailServiceImpl" class="headerlink" title="EmailServiceImpl"></a>EmailServiceImpl</h3><pre><code>/**
- *
- * @author zhangjianbo
- * @date 2018/2/22
- */
-@Service(&quot;emailServiceImpl&quot;)
-public class EmailServiceImpl implements EmailService&#123;
-    @Resource(name = &quot;javaMailSender&quot;)
-    private JavaMailSenderImpl javaMailSender;
-    @Value(&quot;$&#123;ywt.email.host&#125;&quot;)
-    private String emailHost;
-    @Value(&quot;$&#123;ywt.email.port&#125;&quot;)
-    private String emailPort;
-    @Value(&quot;$&#123;ywt.email.username&#125;&quot;)
-    private String userName;
-    @Value(&quot;$&#123;ywt.email.password&#125;&quot;)
-    private String password;
-    @Value(&quot;$&#123;ywt.email.from&#125;&quot;)
-    private String from;
-
-    private static final String EXCEL=&quot;.xls&quot;;
-
-    @Override
-    public EmailSendResultDto send(EmailSendDto emailSendDto) &#123;
-        EmailSendResultDto sendResultDto = new EmailSendResultDto();
-        try &#123;
-            javaMailSender.setHost(emailHost);
-            javaMailSender.setPort(Integer.valueOf(emailPort));
-            javaMailSender.setUsername(userName);
-            javaMailSender.setPassword(password);
-            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-            MimeMessageHelper mimeMessageHelper;
-            if (emailSendDto.getMultipart()) &#123;
-                mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, &quot;utf-8&quot;);
-            &#125;else&#123;
-                mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, &quot;utf-8&quot;);
-            &#125;
-            mimeMessageHelper.setFrom(from);
-            mimeMessageHelper.setTo(emailSendDto.getTo());
-            mimeMessageHelper.setSubject(emailSendDto.getSubject());
-            mimeMessageHelper.setText(emailSendDto.getText(), true);
-
-            if(!emailSendDto.getMultipart())&#123;
-                javaMailSender.send(mimeMessage);
-                sendResultDto.setSendStatus(EmailSendStatus.SUCCESS);
-            &#125;else&#123;
-                List&lt;String&gt; tempExcelFilePathList = new ArrayList&lt;&gt;();
-                File zipFile = null;
-                File directory =null;
-                try &#123;
-                    String directoryPath = System.getProperty(&quot;java.io.tmpdir&quot;) + File.separator + UUID.randomUUID();
-                    directory = new File(directoryPath);
-                    if (!directory.exists()) &#123;
-                        directory.mkdir();
-                    &#125;
-                    for (int i = 0; i &lt; emailSendDto.getHeaderList().size(); i++) &#123;
-                        String[] header = emailSendDto.getHeaderList().get(i);
-                        List&lt;String[]&gt; dataList = emailSendDto.getDataList().get(i);
-                        String excelFileName=emailSendDto.getFileNameList().get(i);
-                        //1.向临时路径写入excel文件
-                        String excelFilePath = directoryPath + File.separator + excelFileName + EXCEL;
-
-                        try &#123;
-                            Workbook wb=new HSSFWorkbook();
-                            Sheet sheet=wb.createSheet(excelFileName);
-                            sheet.setDefaultColumnWidth(20);
-                            sheet.setDefaultRowHeightInPoints(20);
-                            //写入表头
-                            Row rowHeader=sheet.createRow(0);
-                            for(int k=0;k&lt;header.length;k++)&#123;
-                                Cell cell=rowHeader.createCell(k);
-                                cell.setCellValue(header[k]);
-                            &#125;
-                            //写入内容
-                            for (int t = 0; t &lt; dataList.size(); t++) &#123;
-                                Row rowData=sheet.createRow(t+1);
-                                String[] data = dataList.get(t);
-                                for(int w=0;w&lt;data.length;w++)&#123;
-                                    Cell cell=rowData.createCell(w);
-                                    cell.setCellValue(data[w]);
-                                &#125;
-                            &#125;
-
-                            FileOutputStream fileOut=new FileOutputStream(excelFilePath);
-                            wb.write(fileOut);
-                            fileOut.close();
-
-                            System.out.println(&quot;--------EXCEL文件写入成功--------&quot;);
-                            tempExcelFilePathList.add(excelFilePath);
-                        &#125; catch (IOException ex) &#123;
-                            System.out.println(&quot;--------EXCEL文件写入失败--------&quot;);
-                            ex.printStackTrace();
-                        &#125;
-                    &#125;
-
-                    if (tempExcelFilePathList.size() == 1) &#123;
-                        File file = new File(tempExcelFilePathList.get(0));
-                        mimeMessageHelper.addAttachment(MimeUtility.encodeWord(emailSendDto.getFileNameList().get(0))+EXCEL, file);
-                    &#125; else &#123;
-                        String zipFileName = emailSendDto.getZipFileName();
-                        ZipOutputStream outStream = new ZipOutputStream(new FileOutputStream(zipFileName));
-                        for (int n = 0; n &lt; tempExcelFilePathList.size(); n++) &#123;
-                            String csvPath = tempExcelFilePathList.get(n);
-                            File file = new File(csvPath);
-                            FileInputStream inStream = new FileInputStream(file);
-                            outStream.putNextEntry(new ZipEntry(emailSendDto.getFileNameList().get(n)));
-
-                            byte[] buffer = new byte[1024];
-                            int bytesRead;
-
-                            while ((bytesRead = inStream.read(buffer)) &gt; 0) &#123;
-                                outStream.write(buffer, 0, bytesRead);
-                            &#125;
-                            inStream.close();
-                        &#125;
-                        outStream.closeEntry();
-                        outStream.close();
-
-                        zipFile = new File(zipFileName);
-                        mimeMessageHelper.addAttachment(MimeUtility.encodeWord(zipFileName), zipFile);
-                    &#125;
-                    javaMailSender.send(mimeMessage);
-                    sendResultDto.setSendStatus(EmailSendStatus.SUCCESS);
-                &#125; catch (IOException ex) &#123;
-                    sendResultDto.setSendStatus(EmailSendStatus.FAIL);
-                    sendResultDto.setErrMsg(ex.getMessage());
-                &#125; finally &#123;
-                    //3.删除临时文件
-                    for (int m = 0; m &lt; tempExcelFilePathList.size(); m++) &#123;
-                        File file = new File(tempExcelFilePathList.get(m));
-                        if (file.exists() &amp;&amp; file.isFile()) &#123;
-                            try &#123;
-                                file.delete();
-                            &#125; catch (Exception e) &#123;
-                                System.out.println(&quot;删除csv临时文件失败&quot;);
-                            &#125;
-                        &#125;
-                    &#125;
-                    if (zipFile != null) &#123;
-                        try &#123;
-                            zipFile.delete();
-                        &#125; catch (Exception ex) &#123;
-                            System.out.println(&quot;删除zip临时文件失败&quot;);
-                        &#125;
-                    &#125;
-                    if(directory!=null) &#123;
-                        try &#123;
-                            directory.delete();
-                        &#125; catch (Exception ex) &#123;
-                            System.out.println(&quot;删除临时目录失败&quot;);
-                        &#125;
-                    &#125;
-                &#125;
-            &#125;
-        &#125; catch (MessagingException e) &#123;
-            sendResultDto.setSendStatus(EmailSendStatus.FAIL);
-            sendResultDto.setErrMsg(e.getMessage());
-        &#125; catch (Exception ex2) &#123;
-            sendResultDto.setSendStatus(EmailSendStatus.FAIL);
-            sendResultDto.setErrMsg(ex2.getMessage());
-        &#125;
-        return sendResultDto;
-    &#125;
-&#125;
-</code></pre>
-<h3 id="调用Example"><a href="#调用Example" class="headerlink" title="调用Example"></a>调用Example</h3><pre><code>    EmailSendDto sendDto=new EmailSendDto();
-    //邮件主题
-    sendDto.setSubject(&quot;XXX-报表&quot;);
-    //邮件内容
-    sendDto.setText(&quot;XXX-报表&quot;);
-    //附件名称列表
-    sendDto.getFileNameList().add(&quot;XXX-报表&quot;);
-    //附件表头
-    sendDto.getHeaderList().add(new String[]&#123;&quot;姓名&quot;,&quot;年龄&quot;,&quot;性别&quot;&#125;);
-    //附件数据（与/附件名称/表头要一一对应）
-    List&lt;String[]&gt; dataList=new ArrayList();//获取具体数据
+<search> 
   
-    sendDto.getDataList().add(dataList);
+  
     
-    Boolean res=emailService.send(sendDto,currentSalesman);
-    if(res)&#123;
-        return ResultWrapperFactory.toSuccess(&quot;发送成功&quot;);
-    &#125;else&#123;
-        return ResultWrapperFactory.toError(&quot;发送失败&quot;);
-    &#125;
-</code></pre>
-]]></content>
+    <entry>
+      <title>Hello World</title>
+      <link href="2021/05/13/hello-world/"/>
+      <url>2021/05/13/hello-world/</url>
+      
+        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre class=" language-bash"><code class="language-bash">$ hexo new <span class="token string">"My New Post"</span></code></pre><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre class=" language-bash"><code class="language-bash">$ hexo server</code></pre><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre class=" language-bash"><code class="language-bash">$ hexo generate</code></pre><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre class=" language-bash"><code class="language-bash">$ hexo deploy</code></pre><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>MyLove</title>
+      <link href="2021/05/12/mylove/"/>
+      <url>2021/05/12/mylove/</url>
+      
+        <content type="html"><![CDATA[<p><img src="/assets/photo/love.jpg" alt="MyLove"></p>]]></content>
+      
+      
       <categories>
-        <category>技术</category>
+          
+          <category> 照片 </category>
+          
       </categories>
-      <tags>
-        <tag>java</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>MyLove</title>
-    <url>/2021/05/12/mylove/</url>
-    <content><![CDATA[<p><img src="/assets/photo/love.jpg" alt="MyLove"></p>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> MyLove </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>张煦涵</title>
+      <link href="2021/05/12/zhangxuhan/"/>
+      <url>2021/05/12/zhangxuhan/</url>
+      
+        <content type="html"><![CDATA[<p><img src="/assets/photo/IMG_20170924_083913.jpg" alt="MyLove"></p><p><img src="/assets/photo/IMG_20170924_180334_HHT.jpg" alt="MyLove"></p>]]></content>
+      
+      
       <categories>
-        <category>照片</category>
+          
+          <category> 照片 </category>
+          
       </categories>
-      <tags>
-        <tag>MyLove</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>jQuery QRcode</title>
-    <url>/2017/06/05/jquery-qrcode/</url>
-    <content><![CDATA[<p>jquery.qrcode.js 是一个能够在客户端生成矩阵二维码QRCode 的jquery插件 ,使用它可以很方便的在页面上生成二维条码。</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="引用jquery-jquery-qrcode"><a href="#引用jquery-jquery-qrcode" class="headerlink" title="引用jquery,jquery-qrcode"></a>引用jquery,jquery-qrcode</h3><pre class=" language-markdown"><code class="language-markdown"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text/javascript<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>../../scripts/jquery-1.10.1.min.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script language-javascript"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>../../scripts/jquery.qrcode.min.js<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text/javascript<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script language-javascript"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
-</code></pre>
-<h3 id="定义div"><a href="#定义div" class="headerlink" title="定义div"></a>定义div</h3><pre class=" language-markdown"><code class="language-markdown"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>code<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
-</code></pre>
-<h3 id="调用"><a href="#调用" class="headerlink" title="调用"></a>调用</h3><pre class=" language-markdown"><code class="language-markdown">function showQRCodeDiv() <span class="token entity" title="&#123;">&amp;#123;</span>
-<span class="token code keyword">    var row = mastergrid.getRowByUID(row_uid);</span>
-<span class="token code keyword">    $("#code").text("").qrcode(&amp;#123;</span>
-<span class="token code keyword">        render: "canvas", //table/canvas方式</span>
-<span class="token code keyword">        width: 228, //宽度</span>
-<span class="token code keyword">        height:228, //高度</span>
-<span class="token code keyword">        text: utf16to8(‘测试’) //二维码</span>
-<span class="token code keyword">    &amp;#125;);</span>
-<span class="token entity" title="&#125;">&amp;#125;</span>
-
-function utf16to8(str) <span class="token entity" title="&#123;">&amp;#123;</span>
-<span class="token code keyword">    var out, i, len, c;</span>
-<span class="token code keyword">    out = "";</span>
-<span class="token code keyword">    len = str.length;</span>
-<span class="token code keyword">    for(i = 0; i &lt; len; i++) &amp;#123;</span>
-<span class="token code keyword">        c = str.charCodeAt(i);</span>
-<span class="token code keyword">        if ((c >= 0x0001) &amp;&amp; (c &lt;= 0x007F)) &amp;#123;</span>
-<span class="token code keyword">            out += str.charAt(i);</span>
-<span class="token code keyword">        &amp;#125; else if (c > 0x07FF) &amp;#123;</span>
-<span class="token code keyword">            out += String.fromCharCode(0xE0 | ((c >> 12) &amp; 0x0F));</span>
-<span class="token code keyword">            out += String.fromCharCode(0x80 | ((c >>  6) &amp; 0x3F));</span>
-<span class="token code keyword">            out += String.fromCharCode(0x80 | ((c >>  0) &amp; 0x3F));</span>
-<span class="token code keyword">        &amp;#125; else &amp;#123;</span>
-<span class="token code keyword">            out += String.fromCharCode(0xC0 | ((c >>  6) &amp; 0x1F));</span>
-<span class="token code keyword">            out += String.fromCharCode(0x80 | ((c >>  0) &amp; 0x3F));</span>
-<span class="token code keyword">        &amp;#125;</span>
-<span class="token code keyword">    &amp;#125;</span>
-<span class="token code keyword">    return out;</span>
-<span class="token entity" title="&#125;">&amp;#125;</span>
-
-function saveQRCodeDiv() <span class="token entity" title="&#123;">&amp;#123;</span>
-<span class="token code keyword">    var myCanvas = $("canvas")[0];</span>
-<span class="token code keyword">    var image = myCanvas.toDataURL("image/png").replace("image/png", "image/octet-stream");</span>
-
-<span class="token code keyword">    var link = document.createElement('a');</span>
-<span class="token code keyword">    link.href = image;</span>
-<span class="token code keyword">    var filename = mini.get("bqcode_2").getValue() + '.png';</span>
-<span class="token code keyword">    link.download = filename;</span>
-<span class="token code keyword">    var event = document.createEvent('MouseEvents');</span>
-<span class="token code keyword">    event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);</span>
-<span class="token code keyword">    link.dispatchEvent(event);</span>
-<span class="token entity" title="&#125;">&amp;#125;</span>
-</code></pre>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> MyBaby </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>张子宸</title>
+      <link href="2021/05/12/zhangzichen/"/>
+      <url>2021/05/12/zhangzichen/</url>
+      
+        <content type="html"><![CDATA[<p><img src="/assets/photo/IMG_20170924_083913.jpg" alt="MyLove"></p><p><img src="/assets/photo/IMG_20170924_180334_HHT.jpg" alt="MyLove"></p>]]></content>
+      
+      
       <categories>
-        <category>技术</category>
+          
+          <category> 照片 </category>
+          
       </categories>
-      <tags>
-        <tag>jQuery</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>select2</title>
-    <url>/2017/12/03/select2/</url>
-    <content><![CDATA[<p>Select2 提供了一个可自定义的选择框，该框支持搜索、标记、远程数据集、无限滚动以及许多其他常用选项。</p>
-<p>Select2 是基于 jQuery 的选择框的替代品。它支持搜索，远程数据集和结果分页。</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="引用jquery-select2"><a href="#引用jquery-select2" class="headerlink" title="引用jquery,select2"></a>引用jquery,select2</h3><pre><code>&lt;script type=&quot;text/javascript&quot; src=&quot;../../scripts/jquery-1.10.1.min.js&quot;&gt;&lt;/script&gt;
-&lt;script src=&quot;../../scripts/select2/js/select2.full.min.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
-&lt;script src=&quot;../../scripts/select2/js/i18n/zh-CN.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
-</code></pre>
-<h3 id="定义需要绑定的select"><a href="#定义需要绑定的select" class="headerlink" title="定义需要绑定的select"></a>定义需要绑定的select</h3><pre><code>&lt;select id=&quot;wlxx&quot; class=&quot;form-control&quot; name=&quot;wlxx&quot; style=&quot;max-width: 150px; width: 150px;&quot;&gt;&lt;/select&gt;
-</code></pre>
-<h3 id="js调用"><a href="#js调用" class="headerlink" title="js调用"></a>js调用</h3><pre class=" language-markdown"><code class="language-markdown">$("#wlxx").select2(<span class="token entity" title="&#123;">&amp;#123;</span>
-<span class="token code keyword">    placeholder:"",</span>
-<span class="token code keyword">    minimumInputLength: 1,</span>
-<span class="token code keyword">    maximumInputLength:100,</span>
-<span class="token code keyword">    allowClear:true,</span>
-<span class="token code keyword">    width:300,</span>
-<span class="token code keyword">    language: "zh-CN",</span>
-<span class="token code keyword">    ajax: &amp;#123;</span>
-<span class="token code keyword">        url: './qrcode!searchWlxx.action',</span>
-<span class="token code keyword">        contentType : "application/json",</span>
-<span class="token code keyword">        dataType: 'json',</span>
-<span class="token code keyword">        type:'get',</span>
-<span class="token code keyword">        delay: 500,</span>
-<span class="token code keyword">        async:false,</span>
-<span class="token code keyword">        timeout : 3000, //超时时间设置，单位毫秒</span>
-<span class="token code keyword">        data: function (params) &amp;#123;</span>
-<span class="token code keyword">            return &amp;#123;</span>
-<span class="token code keyword">                queryStr:encodeURI(encodeURI(params.term).replace(/\+/g,'%2B')),</span>
-<span class="token code keyword">                pageIndex:params.page,</span>
-<span class="token code keyword">                pageSize:10</span>
-<span class="token code keyword">            &amp;#125;</span>
-<span class="token code keyword">        &amp;#125;,</span>
-<span class="token code keyword">        processResults: function (data,params) &amp;#123;</span>
-<span class="token code keyword">            params.page = params.page || 1;</span>
-<span class="token code keyword">            var results = [];</span>
-<span class="token code keyword">            $.each(data.list, function (i, v) &amp;#123;</span>
-<span class="token code keyword">                var o = &amp;#123;&amp;#125;;</span>
-<span class="token code keyword">                o.id = v.wlxxid;</span>
-<span class="token code keyword">                o.text=v.wlmc;</span>
-<span class="token code keyword">                o.wlxxid=v.wlxxid;</span>
-<span class="token code keyword">                o.wlmc = v.wlmc;</span>
-<span class="token code keyword">                o.wlbh=v.wlbh;</span>
-<span class="token code keyword">                results.push(o);</span>
-<span class="token code keyword">            &amp;#125;);</span>
-<span class="token code keyword">            return &amp;#123;</span>
-<span class="token code keyword">                results: results,</span>
-<span class="token code keyword">                pagination: &amp;#123;</span>
-<span class="token code keyword">                    more: (params.page * 10) &lt; data.total //每页10条数据</span>
-<span class="token code keyword">                &amp;#125;</span>
-<span class="token code keyword">            &amp;#125;;</span>
-<span class="token code keyword">        &amp;#125;,</span>
-<span class="token code keyword">        cache: true</span>
-<span class="token code keyword">    &amp;#125;,</span>
-<span class="token code keyword">    escapeMarkup: function (markup) &amp;#123; return markup; &amp;#125;,</span>
-<span class="token code keyword">    templateResult: function formatRepo(repo)&amp;#123;</span>
-<span class="token code keyword">        if(!repo.id)&amp;#123;</span>
-<span class="token code keyword">            return "加载中...";</span>
-<span class="token code keyword">        &amp;#125;</span>
-<span class="token code keyword">        return '&lt;span style="color:black;font-weight:bold;">' + repo.wlmc + '&lt;/span>&lt;/br>&lt;span> 编号：' + repo.wlbh + '&lt;/span> '&amp;#125;,</span>
-<span class="token code keyword">    templateSelection: function formatRepoSelection(repo, container)&amp;#123;</span>
-<span class="token code keyword">        if(!repo.id)&amp;#123;</span>
-<span class="token code keyword">            return "请选择商品";</span>
-<span class="token code keyword">        &amp;#125;</span>
-<span class="token code keyword">        return repo.text</span>
-<span class="token code keyword">    &amp;#125;</span>
-<span class="token entity" title="&#125;">&amp;#125;</span>);
-</code></pre>
-<h3 id="要求的JSON格式"><a href="#要求的JSON格式" class="headerlink" title="要求的JSON格式:"></a>要求的JSON格式:</h3><pre><code>&#123;
-    &quot;total&quot;:6381,
-    &quot;list&quot;:[
-        &#123;&quot;wlxxid&quot;:&quot;WLXX20140505092138953&quot;,&quot;wlbh&quot;:&quot;03010109906018750201&quot;,&quot;wlmc&quot;:&quot;12.00-20-20PR[M9088]GOODRIDE(好运)&quot;,&quot;RN&quot;:1&#125;,
-        &#123;&quot;wlxxid&quot;:&quot;WLXX20140731150150987&quot;,&quot;wlbh&quot;:&quot;03010437201037100201&quot;,&quot;wlmc&quot;:&quot;165/60R14PR[RP28]H GOODRIDE(好运)无内&quot;,&quot;RN&quot;:10&#125;
-    ]
-&#125;
-</code></pre>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> MyBaby </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>javaMail</title>
+      <link href="2018/02/05/javamail/"/>
+      <url>2018/02/05/javamail/</url>
+      
+        <content type="html"><![CDATA[<p>JavaMail，顾名思义，提供给开发者处理电子邮件相关的编程接口。它是Sun发布的用来处理email的API。它可以方便地执行一些常用的邮件传输。我们可以基于JavaMail开发出类似于Microsoft Outlook的应用程序。</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="properties配置文件"><a href="#properties配置文件" class="headerlink" title="properties配置文件"></a>properties配置文件</h3><pre><code>#-------------邮件服务器信息-------------------mail.smtp.auth=truemail.smtp.timeout=25000mail.smtp.starttls.enable=falseywt.email.host=mail.xxx.comywt.email.port=25ywt.email.from=zhangianbo@xxx.comywt.email.username=xxxywt.email.password=yyy</code></pre><h3 id="添加maven依赖-poi、javamail"><a href="#添加maven依赖-poi、javamail" class="headerlink" title="添加maven依赖:poi、javamail"></a>添加maven依赖:poi、javamail</h3><h3 id="spring配置文件"><a href="#spring配置文件" class="headerlink" title="spring配置文件"></a>spring配置文件</h3><pre><code>&lt;bean id=&quot;javaMailSender&quot; class=&quot;org.springframework.mail.javamail.JavaMailSenderImpl&quot;&gt;        &lt;property name=&quot;javaMailProperties&quot;&gt;            &lt;props&gt;                &lt;prop key=&quot;mail.smtp.auth&quot;&gt;$&#123;mail.smtp.auth&#125;&lt;/prop&gt;                &lt;prop key=&quot;mail.smtp.timeout&quot;&gt;$&#123;mail.smtp.timeout&#125;&lt;/prop&gt;                &lt;prop key=&quot;mail.smtp.starttls.enable&quot;&gt;$&#123;mail.smtp.starttls.enable&#125;&lt;/prop&gt;                &lt;!-- &lt;prop key=&quot;mail.smtp.socketFactory.class&quot;&gt;javax.net.ssl.SSLSocketFactory&lt;/prop&gt; --&gt;            &lt;/props&gt;        &lt;/property&gt;    &lt;/bean&gt;</code></pre><h3 id="EmailSendDto"><a href="#EmailSendDto" class="headerlink" title="EmailSendDto"></a>EmailSendDto</h3><pre><code>/** * @author zhangjianbo * @date 2018/2/23 */@Data@NoArgsConstructorpublic class EmailSendDto implements Serializable&#123;    private String from;    private String to;    private String subject;    private String text;    /**     * zip压缩包文件名     */    private String zipFileName;    /**     * 是否批量发送     */    private Boolean isBatch=false;    /**     * 是否有附件     */    private Boolean multipart=false;    /**     * csv文件名列表     */    private List&lt;String&gt; fileNameList=new ArrayList&lt;&gt;();    /**     * csv文件表头     */    private List&lt;String[]&gt; headerList=new ArrayList&lt;&gt;();    /**     * csv文件数据     */    private List&lt;List&lt;String[]&gt;&gt; dataList=new ArrayList&lt;&gt;();&#125;</code></pre><h3 id="EmailService"><a href="#EmailService" class="headerlink" title="EmailService"></a>EmailService</h3><pre><code>/** * @author zhangjianbo * @date 2018/2/22 */public interface EmailService &#123;    /**     * 发送邮件     * @param emailSendDto     * @return     */    EmailSendResultDto send(EmailSendDto emailSendDto);&#125;</code></pre><h3 id="EmailServiceImpl"><a href="#EmailServiceImpl" class="headerlink" title="EmailServiceImpl"></a>EmailServiceImpl</h3><pre><code>/** * * @author zhangjianbo * @date 2018/2/22 */@Service(&quot;emailServiceImpl&quot;)public class EmailServiceImpl implements EmailService&#123;    @Resource(name = &quot;javaMailSender&quot;)    private JavaMailSenderImpl javaMailSender;    @Value(&quot;$&#123;ywt.email.host&#125;&quot;)    private String emailHost;    @Value(&quot;$&#123;ywt.email.port&#125;&quot;)    private String emailPort;    @Value(&quot;$&#123;ywt.email.username&#125;&quot;)    private String userName;    @Value(&quot;$&#123;ywt.email.password&#125;&quot;)    private String password;    @Value(&quot;$&#123;ywt.email.from&#125;&quot;)    private String from;    private static final String EXCEL=&quot;.xls&quot;;    @Override    public EmailSendResultDto send(EmailSendDto emailSendDto) &#123;        EmailSendResultDto sendResultDto = new EmailSendResultDto();        try &#123;            javaMailSender.setHost(emailHost);            javaMailSender.setPort(Integer.valueOf(emailPort));            javaMailSender.setUsername(userName);            javaMailSender.setPassword(password);            MimeMessage mimeMessage = javaMailSender.createMimeMessage();            MimeMessageHelper mimeMessageHelper;            if (emailSendDto.getMultipart()) &#123;                mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, &quot;utf-8&quot;);            &#125;else&#123;                mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, &quot;utf-8&quot;);            &#125;            mimeMessageHelper.setFrom(from);            mimeMessageHelper.setTo(emailSendDto.getTo());            mimeMessageHelper.setSubject(emailSendDto.getSubject());            mimeMessageHelper.setText(emailSendDto.getText(), true);            if(!emailSendDto.getMultipart())&#123;                javaMailSender.send(mimeMessage);                sendResultDto.setSendStatus(EmailSendStatus.SUCCESS);            &#125;else&#123;                List&lt;String&gt; tempExcelFilePathList = new ArrayList&lt;&gt;();                File zipFile = null;                File directory =null;                try &#123;                    String directoryPath = System.getProperty(&quot;java.io.tmpdir&quot;) + File.separator + UUID.randomUUID();                    directory = new File(directoryPath);                    if (!directory.exists()) &#123;                        directory.mkdir();                    &#125;                    for (int i = 0; i &lt; emailSendDto.getHeaderList().size(); i++) &#123;                        String[] header = emailSendDto.getHeaderList().get(i);                        List&lt;String[]&gt; dataList = emailSendDto.getDataList().get(i);                        String excelFileName=emailSendDto.getFileNameList().get(i);                        //1.向临时路径写入excel文件                        String excelFilePath = directoryPath + File.separator + excelFileName + EXCEL;                        try &#123;                            Workbook wb=new HSSFWorkbook();                            Sheet sheet=wb.createSheet(excelFileName);                            sheet.setDefaultColumnWidth(20);                            sheet.setDefaultRowHeightInPoints(20);                            //写入表头                            Row rowHeader=sheet.createRow(0);                            for(int k=0;k&lt;header.length;k++)&#123;                                Cell cell=rowHeader.createCell(k);                                cell.setCellValue(header[k]);                            &#125;                            //写入内容                            for (int t = 0; t &lt; dataList.size(); t++) &#123;                                Row rowData=sheet.createRow(t+1);                                String[] data = dataList.get(t);                                for(int w=0;w&lt;data.length;w++)&#123;                                    Cell cell=rowData.createCell(w);                                    cell.setCellValue(data[w]);                                &#125;                            &#125;                            FileOutputStream fileOut=new FileOutputStream(excelFilePath);                            wb.write(fileOut);                            fileOut.close();                            System.out.println(&quot;--------EXCEL文件写入成功--------&quot;);                            tempExcelFilePathList.add(excelFilePath);                        &#125; catch (IOException ex) &#123;                            System.out.println(&quot;--------EXCEL文件写入失败--------&quot;);                            ex.printStackTrace();                        &#125;                    &#125;                    if (tempExcelFilePathList.size() == 1) &#123;                        File file = new File(tempExcelFilePathList.get(0));                        mimeMessageHelper.addAttachment(MimeUtility.encodeWord(emailSendDto.getFileNameList().get(0))+EXCEL, file);                    &#125; else &#123;                        String zipFileName = emailSendDto.getZipFileName();                        ZipOutputStream outStream = new ZipOutputStream(new FileOutputStream(zipFileName));                        for (int n = 0; n &lt; tempExcelFilePathList.size(); n++) &#123;                            String csvPath = tempExcelFilePathList.get(n);                            File file = new File(csvPath);                            FileInputStream inStream = new FileInputStream(file);                            outStream.putNextEntry(new ZipEntry(emailSendDto.getFileNameList().get(n)));                            byte[] buffer = new byte[1024];                            int bytesRead;                            while ((bytesRead = inStream.read(buffer)) &gt; 0) &#123;                                outStream.write(buffer, 0, bytesRead);                            &#125;                            inStream.close();                        &#125;                        outStream.closeEntry();                        outStream.close();                        zipFile = new File(zipFileName);                        mimeMessageHelper.addAttachment(MimeUtility.encodeWord(zipFileName), zipFile);                    &#125;                    javaMailSender.send(mimeMessage);                    sendResultDto.setSendStatus(EmailSendStatus.SUCCESS);                &#125; catch (IOException ex) &#123;                    sendResultDto.setSendStatus(EmailSendStatus.FAIL);                    sendResultDto.setErrMsg(ex.getMessage());                &#125; finally &#123;                    //3.删除临时文件                    for (int m = 0; m &lt; tempExcelFilePathList.size(); m++) &#123;                        File file = new File(tempExcelFilePathList.get(m));                        if (file.exists() &amp;&amp; file.isFile()) &#123;                            try &#123;                                file.delete();                            &#125; catch (Exception e) &#123;                                System.out.println(&quot;删除csv临时文件失败&quot;);                            &#125;                        &#125;                    &#125;                    if (zipFile != null) &#123;                        try &#123;                            zipFile.delete();                        &#125; catch (Exception ex) &#123;                            System.out.println(&quot;删除zip临时文件失败&quot;);                        &#125;                    &#125;                    if(directory!=null) &#123;                        try &#123;                            directory.delete();                        &#125; catch (Exception ex) &#123;                            System.out.println(&quot;删除临时目录失败&quot;);                        &#125;                    &#125;                &#125;            &#125;        &#125; catch (MessagingException e) &#123;            sendResultDto.setSendStatus(EmailSendStatus.FAIL);            sendResultDto.setErrMsg(e.getMessage());        &#125; catch (Exception ex2) &#123;            sendResultDto.setSendStatus(EmailSendStatus.FAIL);            sendResultDto.setErrMsg(ex2.getMessage());        &#125;        return sendResultDto;    &#125;&#125;</code></pre><h3 id="调用Example"><a href="#调用Example" class="headerlink" title="调用Example"></a>调用Example</h3><pre><code>    EmailSendDto sendDto=new EmailSendDto();    //邮件主题    sendDto.setSubject(&quot;XXX-报表&quot;);    //邮件内容    sendDto.setText(&quot;XXX-报表&quot;);    //附件名称列表    sendDto.getFileNameList().add(&quot;XXX-报表&quot;);    //附件表头    sendDto.getHeaderList().add(new String[]&#123;&quot;姓名&quot;,&quot;年龄&quot;,&quot;性别&quot;&#125;);    //附件数据（与/附件名称/表头要一一对应）    List&lt;String[]&gt; dataList=new ArrayList();//获取具体数据      sendDto.getDataList().add(dataList);        Boolean res=emailService.send(sendDto,currentSalesman);    if(res)&#123;        return ResultWrapperFactory.toSuccess(&quot;发送成功&quot;);    &#125;else&#123;        return ResultWrapperFactory.toError(&quot;发送失败&quot;);    &#125;</code></pre>]]></content>
+      
+      
       <categories>
-        <category>技术</category>
+          
+          <category> 技术 </category>
+          
       </categories>
-      <tags>
-        <tag>select2</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>张煦涵</title>
-    <url>/2021/05/12/zhangxuhan/</url>
-    <content><![CDATA[<p><img src="/assets/photo/IMG_20170924_083913.jpg" alt="MyLove"></p>
-<p><img src="/assets/photo/IMG_20170924_180334_HHT.jpg" alt="MyLove"></p>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> java </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>select2</title>
+      <link href="2017/12/03/select2/"/>
+      <url>2017/12/03/select2/</url>
+      
+        <content type="html"><![CDATA[<p>Select2 提供了一个可自定义的选择框，该框支持搜索、标记、远程数据集、无限滚动以及许多其他常用选项。</p><p>Select2 是基于 jQuery 的选择框的替代品。它支持搜索，远程数据集和结果分页。</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="引用jquery-select2"><a href="#引用jquery-select2" class="headerlink" title="引用jquery,select2"></a>引用jquery,select2</h3><pre><code>&lt;script type=&quot;text/javascript&quot; src=&quot;../../scripts/jquery-1.10.1.min.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;../../scripts/select2/js/select2.full.min.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;&lt;script src=&quot;../../scripts/select2/js/i18n/zh-CN.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;</code></pre><h3 id="定义需要绑定的select"><a href="#定义需要绑定的select" class="headerlink" title="定义需要绑定的select"></a>定义需要绑定的select</h3><pre><code>&lt;select id=&quot;wlxx&quot; class=&quot;form-control&quot; name=&quot;wlxx&quot; style=&quot;max-width: 150px; width: 150px;&quot;&gt;&lt;/select&gt;</code></pre><h3 id="js调用"><a href="#js调用" class="headerlink" title="js调用"></a>js调用</h3><pre class=" language-markdown"><code class="language-markdown">$("#wlxx").select2(<span class="token entity" title="&#123;">&amp;#123;</span><span class="token code keyword">    placeholder:"",</span><span class="token code keyword">    minimumInputLength: 1,</span><span class="token code keyword">    maximumInputLength:100,</span><span class="token code keyword">    allowClear:true,</span><span class="token code keyword">    width:300,</span><span class="token code keyword">    language: "zh-CN",</span><span class="token code keyword">    ajax: &amp;#123;</span><span class="token code keyword">        url: './qrcode!searchWlxx.action',</span><span class="token code keyword">        contentType : "application/json",</span><span class="token code keyword">        dataType: 'json',</span><span class="token code keyword">        type:'get',</span><span class="token code keyword">        delay: 500,</span><span class="token code keyword">        async:false,</span><span class="token code keyword">        timeout : 3000, //超时时间设置，单位毫秒</span><span class="token code keyword">        data: function (params) &amp;#123;</span><span class="token code keyword">            return &amp;#123;</span><span class="token code keyword">                queryStr:encodeURI(encodeURI(params.term).replace(/\+/g,'%2B')),</span><span class="token code keyword">                pageIndex:params.page,</span><span class="token code keyword">                pageSize:10</span><span class="token code keyword">            &amp;#125;</span><span class="token code keyword">        &amp;#125;,</span><span class="token code keyword">        processResults: function (data,params) &amp;#123;</span><span class="token code keyword">            params.page = params.page || 1;</span><span class="token code keyword">            var results = [];</span><span class="token code keyword">            $.each(data.list, function (i, v) &amp;#123;</span><span class="token code keyword">                var o = &amp;#123;&amp;#125;;</span><span class="token code keyword">                o.id = v.wlxxid;</span><span class="token code keyword">                o.text=v.wlmc;</span><span class="token code keyword">                o.wlxxid=v.wlxxid;</span><span class="token code keyword">                o.wlmc = v.wlmc;</span><span class="token code keyword">                o.wlbh=v.wlbh;</span><span class="token code keyword">                results.push(o);</span><span class="token code keyword">            &amp;#125;);</span><span class="token code keyword">            return &amp;#123;</span><span class="token code keyword">                results: results,</span><span class="token code keyword">                pagination: &amp;#123;</span><span class="token code keyword">                    more: (params.page * 10) &lt; data.total //每页10条数据</span><span class="token code keyword">                &amp;#125;</span><span class="token code keyword">            &amp;#125;;</span><span class="token code keyword">        &amp;#125;,</span><span class="token code keyword">        cache: true</span><span class="token code keyword">    &amp;#125;,</span><span class="token code keyword">    escapeMarkup: function (markup) &amp;#123; return markup; &amp;#125;,</span><span class="token code keyword">    templateResult: function formatRepo(repo)&amp;#123;</span><span class="token code keyword">        if(!repo.id)&amp;#123;</span><span class="token code keyword">            return "加载中...";</span><span class="token code keyword">        &amp;#125;</span><span class="token code keyword">        return '&lt;span style="color:black;font-weight:bold;">' + repo.wlmc + '&lt;/span>&lt;/br>&lt;span> 编号：' + repo.wlbh + '&lt;/span> '&amp;#125;,</span><span class="token code keyword">    templateSelection: function formatRepoSelection(repo, container)&amp;#123;</span><span class="token code keyword">        if(!repo.id)&amp;#123;</span><span class="token code keyword">            return "请选择商品";</span><span class="token code keyword">        &amp;#125;</span><span class="token code keyword">        return repo.text</span><span class="token code keyword">    &amp;#125;</span><span class="token entity" title="&#125;">&amp;#125;</span>);</code></pre><h3 id="要求的JSON格式"><a href="#要求的JSON格式" class="headerlink" title="要求的JSON格式:"></a>要求的JSON格式:</h3><pre><code>&#123;    &quot;total&quot;:6381,    &quot;list&quot;:[        &#123;&quot;wlxxid&quot;:&quot;WLXX20140505092138953&quot;,&quot;wlbh&quot;:&quot;03010109906018750201&quot;,&quot;wlmc&quot;:&quot;12.00-20-20PR[M9088]GOODRIDE(好运)&quot;,&quot;RN&quot;:1&#125;,        &#123;&quot;wlxxid&quot;:&quot;WLXX20140731150150987&quot;,&quot;wlbh&quot;:&quot;03010437201037100201&quot;,&quot;wlmc&quot;:&quot;165/60R14PR[RP28]H GOODRIDE(好运)无内&quot;,&quot;RN&quot;:10&#125;    ]&#125;</code></pre>]]></content>
+      
+      
       <categories>
-        <category>照片</category>
+          
+          <category> 技术 </category>
+          
       </categories>
-      <tags>
-        <tag>MyBaby</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>张子宸</title>
-    <url>/2021/05/12/zhangzichen/</url>
-    <content><![CDATA[<p><img src="/assets/photo/IMG_20170924_083913.jpg" alt="MyLove"></p>
-<p><img src="/assets/photo/IMG_20170924_180334_HHT.jpg" alt="MyLove"></p>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> select2 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>jQuery QRcode</title>
+      <link href="2017/06/05/jquery-qrcode/"/>
+      <url>2017/06/05/jquery-qrcode/</url>
+      
+        <content type="html"><![CDATA[<p>jquery.qrcode.js 是一个能够在客户端生成矩阵二维码QRCode 的jquery插件 ,使用它可以很方便的在页面上生成二维条码。</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="引用jquery-jquery-qrcode"><a href="#引用jquery-jquery-qrcode" class="headerlink" title="引用jquery,jquery-qrcode"></a>引用jquery,jquery-qrcode</h3><pre class=" language-markdown"><code class="language-markdown"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text/javascript<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>../../scripts/jquery-1.10.1.min.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script language-javascript"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>../../scripts/jquery.qrcode.min.js<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text/javascript<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script language-javascript"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span></code></pre><h3 id="定义div"><a href="#定义div" class="headerlink" title="定义div"></a>定义div</h3><pre class=" language-markdown"><code class="language-markdown"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>code<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span></code></pre><h3 id="调用"><a href="#调用" class="headerlink" title="调用"></a>调用</h3><pre class=" language-markdown"><code class="language-markdown">function showQRCodeDiv() <span class="token entity" title="&#123;">&amp;#123;</span><span class="token code keyword">    var row = mastergrid.getRowByUID(row_uid);</span><span class="token code keyword">    $("#code").text("").qrcode(&amp;#123;</span><span class="token code keyword">        render: "canvas", //table/canvas方式</span><span class="token code keyword">        width: 228, //宽度</span><span class="token code keyword">        height:228, //高度</span><span class="token code keyword">        text: utf16to8(‘测试’) //二维码</span><span class="token code keyword">    &amp;#125;);</span><span class="token entity" title="&#125;">&amp;#125;</span>function utf16to8(str) <span class="token entity" title="&#123;">&amp;#123;</span><span class="token code keyword">    var out, i, len, c;</span><span class="token code keyword">    out = "";</span><span class="token code keyword">    len = str.length;</span><span class="token code keyword">    for(i = 0; i &lt; len; i++) &amp;#123;</span><span class="token code keyword">        c = str.charCodeAt(i);</span><span class="token code keyword">        if ((c >= 0x0001) &amp;&amp; (c &lt;= 0x007F)) &amp;#123;</span><span class="token code keyword">            out += str.charAt(i);</span><span class="token code keyword">        &amp;#125; else if (c > 0x07FF) &amp;#123;</span><span class="token code keyword">            out += String.fromCharCode(0xE0 | ((c >> 12) &amp; 0x0F));</span><span class="token code keyword">            out += String.fromCharCode(0x80 | ((c >>  6) &amp; 0x3F));</span><span class="token code keyword">            out += String.fromCharCode(0x80 | ((c >>  0) &amp; 0x3F));</span><span class="token code keyword">        &amp;#125; else &amp;#123;</span><span class="token code keyword">            out += String.fromCharCode(0xC0 | ((c >>  6) &amp; 0x1F));</span><span class="token code keyword">            out += String.fromCharCode(0x80 | ((c >>  0) &amp; 0x3F));</span><span class="token code keyword">        &amp;#125;</span><span class="token code keyword">    &amp;#125;</span><span class="token code keyword">    return out;</span><span class="token entity" title="&#125;">&amp;#125;</span>function saveQRCodeDiv() <span class="token entity" title="&#123;">&amp;#123;</span><span class="token code keyword">    var myCanvas = $("canvas")[0];</span><span class="token code keyword">    var image = myCanvas.toDataURL("image/png").replace("image/png", "image/octet-stream");</span><span class="token code keyword">    var link = document.createElement('a');</span><span class="token code keyword">    link.href = image;</span><span class="token code keyword">    var filename = mini.get("bqcode_2").getValue() + '.png';</span><span class="token code keyword">    link.download = filename;</span><span class="token code keyword">    var event = document.createEvent('MouseEvents');</span><span class="token code keyword">    event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);</span><span class="token code keyword">    link.dispatchEvent(event);</span><span class="token entity" title="&#125;">&amp;#125;</span></code></pre>]]></content>
+      
+      
       <categories>
-        <category>照片</category>
+          
+          <category> 技术 </category>
+          
       </categories>
-      <tags>
-        <tag>MyBaby</tag>
-      </tags>
-  </entry>
+      
+      
+        <tags>
+            
+            <tag> jQuery </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+  
+  
 </search>
