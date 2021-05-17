@@ -290,6 +290,66 @@ public class EmailServiceImpl implements EmailService&#123;
       </tags>
   </entry>
   <entry>
+    <title>jQuery QRcode</title>
+    <url>/2017/06/05/jquery-qrcode/</url>
+    <content><![CDATA[<p>jquery.qrcode.js 是一个能够在客户端生成矩阵二维码QRCode 的jquery插件 ,使用它可以很方便的在页面上生成二维条码。</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="引用jquery-jquery-qrcode"><a href="#引用jquery-jquery-qrcode" class="headerlink" title="引用jquery,jquery-qrcode"></a>引用jquery,jquery-qrcode</h3><pre class=" language-markdown"><code class="language-markdown"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text/javascript<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>../../scripts/jquery-1.10.1.min.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script language-javascript"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>../../scripts/jquery.qrcode.min.js<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text/javascript<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script language-javascript"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+</code></pre>
+<h3 id="定义div"><a href="#定义div" class="headerlink" title="定义div"></a>定义div</h3><pre class=" language-markdown"><code class="language-markdown"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>code<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+</code></pre>
+<h3 id="调用"><a href="#调用" class="headerlink" title="调用"></a>调用</h3><pre class=" language-markdown"><code class="language-markdown">function showQRCodeDiv() <span class="token entity" title="&#123;">&amp;#123;</span>
+<span class="token code keyword">    var row = mastergrid.getRowByUID(row_uid);</span>
+<span class="token code keyword">    $("#code").text("").qrcode(&amp;#123;</span>
+<span class="token code keyword">        render: "canvas", //table/canvas方式</span>
+<span class="token code keyword">        width: 228, //宽度</span>
+<span class="token code keyword">        height:228, //高度</span>
+<span class="token code keyword">        text: utf16to8(‘测试’) //二维码</span>
+<span class="token code keyword">    &amp;#125;);</span>
+<span class="token entity" title="&#125;">&amp;#125;</span>
+
+function utf16to8(str) <span class="token entity" title="&#123;">&amp;#123;</span>
+<span class="token code keyword">    var out, i, len, c;</span>
+<span class="token code keyword">    out = "";</span>
+<span class="token code keyword">    len = str.length;</span>
+<span class="token code keyword">    for(i = 0; i &lt; len; i++) &amp;#123;</span>
+<span class="token code keyword">        c = str.charCodeAt(i);</span>
+<span class="token code keyword">        if ((c >= 0x0001) &amp;&amp; (c &lt;= 0x007F)) &amp;#123;</span>
+<span class="token code keyword">            out += str.charAt(i);</span>
+<span class="token code keyword">        &amp;#125; else if (c > 0x07FF) &amp;#123;</span>
+<span class="token code keyword">            out += String.fromCharCode(0xE0 | ((c >> 12) &amp; 0x0F));</span>
+<span class="token code keyword">            out += String.fromCharCode(0x80 | ((c >>  6) &amp; 0x3F));</span>
+<span class="token code keyword">            out += String.fromCharCode(0x80 | ((c >>  0) &amp; 0x3F));</span>
+<span class="token code keyword">        &amp;#125; else &amp;#123;</span>
+<span class="token code keyword">            out += String.fromCharCode(0xC0 | ((c >>  6) &amp; 0x1F));</span>
+<span class="token code keyword">            out += String.fromCharCode(0x80 | ((c >>  0) &amp; 0x3F));</span>
+<span class="token code keyword">        &amp;#125;</span>
+<span class="token code keyword">    &amp;#125;</span>
+<span class="token code keyword">    return out;</span>
+<span class="token entity" title="&#125;">&amp;#125;</span>
+
+function saveQRCodeDiv() <span class="token entity" title="&#123;">&amp;#123;</span>
+<span class="token code keyword">    var myCanvas = $("canvas")[0];</span>
+<span class="token code keyword">    var image = myCanvas.toDataURL("image/png").replace("image/png", "image/octet-stream");</span>
+
+<span class="token code keyword">    var link = document.createElement('a');</span>
+<span class="token code keyword">    link.href = image;</span>
+<span class="token code keyword">    var filename = mini.get("bqcode_2").getValue() + '.png';</span>
+<span class="token code keyword">    link.download = filename;</span>
+<span class="token code keyword">    var event = document.createEvent('MouseEvents');</span>
+<span class="token code keyword">    event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);</span>
+<span class="token code keyword">    link.dispatchEvent(event);</span>
+<span class="token entity" title="&#125;">&amp;#125;</span>
+</code></pre>
+]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>jQuery</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MyLove</title>
     <url>/2021/05/12/mylove/</url>
     <content><![CDATA[<p><img src="/assets/photo/love.jpg" alt="MyLove"></p>
@@ -383,66 +443,6 @@ public class EmailServiceImpl implements EmailService&#123;
       </categories>
       <tags>
         <tag>select2</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>jQuery QRcode</title>
-    <url>/2017/06/05/jquery-qrcode/</url>
-    <content><![CDATA[<p>jquery.qrcode.js 是一个能够在客户端生成矩阵二维码QRCode 的jquery插件 ,使用它可以很方便的在页面上生成二维条码。</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="引用jquery-jquery-qrcode"><a href="#引用jquery-jquery-qrcode" class="headerlink" title="引用jquery,jquery-qrcode"></a>引用jquery,jquery-qrcode</h3><pre class=" language-markdown"><code class="language-markdown"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text/javascript<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>../../scripts/jquery-1.10.1.min.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script language-javascript"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>../../scripts/jquery.qrcode.min.js<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text/javascript<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script language-javascript"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
-</code></pre>
-<h3 id="定义div"><a href="#定义div" class="headerlink" title="定义div"></a>定义div</h3><pre class=" language-markdown"><code class="language-markdown"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>code<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
-</code></pre>
-<h3 id="调用"><a href="#调用" class="headerlink" title="调用"></a>调用</h3><pre class=" language-markdown"><code class="language-markdown">function showQRCodeDiv() <span class="token entity" title="&#123;">&amp;#123;</span>
-<span class="token code keyword">    var row = mastergrid.getRowByUID(row_uid);</span>
-<span class="token code keyword">    $("#code").text("").qrcode(&amp;#123;</span>
-<span class="token code keyword">        render: "canvas", //table/canvas方式</span>
-<span class="token code keyword">        width: 228, //宽度</span>
-<span class="token code keyword">        height:228, //高度</span>
-<span class="token code keyword">        text: utf16to8(‘测试’) //二维码</span>
-<span class="token code keyword">    &amp;#125;);</span>
-<span class="token entity" title="&#125;">&amp;#125;</span>
-
-function utf16to8(str) <span class="token entity" title="&#123;">&amp;#123;</span>
-<span class="token code keyword">    var out, i, len, c;</span>
-<span class="token code keyword">    out = "";</span>
-<span class="token code keyword">    len = str.length;</span>
-<span class="token code keyword">    for(i = 0; i &lt; len; i++) &amp;#123;</span>
-<span class="token code keyword">        c = str.charCodeAt(i);</span>
-<span class="token code keyword">        if ((c >= 0x0001) &amp;&amp; (c &lt;= 0x007F)) &amp;#123;</span>
-<span class="token code keyword">            out += str.charAt(i);</span>
-<span class="token code keyword">        &amp;#125; else if (c > 0x07FF) &amp;#123;</span>
-<span class="token code keyword">            out += String.fromCharCode(0xE0 | ((c >> 12) &amp; 0x0F));</span>
-<span class="token code keyword">            out += String.fromCharCode(0x80 | ((c >>  6) &amp; 0x3F));</span>
-<span class="token code keyword">            out += String.fromCharCode(0x80 | ((c >>  0) &amp; 0x3F));</span>
-<span class="token code keyword">        &amp;#125; else &amp;#123;</span>
-<span class="token code keyword">            out += String.fromCharCode(0xC0 | ((c >>  6) &amp; 0x1F));</span>
-<span class="token code keyword">            out += String.fromCharCode(0x80 | ((c >>  0) &amp; 0x3F));</span>
-<span class="token code keyword">        &amp;#125;</span>
-<span class="token code keyword">    &amp;#125;</span>
-<span class="token code keyword">    return out;</span>
-<span class="token entity" title="&#125;">&amp;#125;</span>
-
-function saveQRCodeDiv() <span class="token entity" title="&#123;">&amp;#123;</span>
-<span class="token code keyword">    var myCanvas = $("canvas")[0];</span>
-<span class="token code keyword">    var image = myCanvas.toDataURL("image/png").replace("image/png", "image/octet-stream");</span>
-
-<span class="token code keyword">    var link = document.createElement('a');</span>
-<span class="token code keyword">    link.href = image;</span>
-<span class="token code keyword">    var filename = mini.get("bqcode_2").getValue() + '.png';</span>
-<span class="token code keyword">    link.download = filename;</span>
-<span class="token code keyword">    var event = document.createEvent('MouseEvents');</span>
-<span class="token code keyword">    event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);</span>
-<span class="token code keyword">    link.dispatchEvent(event);</span>
-<span class="token entity" title="&#125;">&amp;#125;</span>
-</code></pre>
-]]></content>
-      <categories>
-        <category>技术</category>
-      </categories>
-      <tags>
-        <tag>jQuery</tag>
       </tags>
   </entry>
   <entry>
